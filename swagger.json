@@ -1,0 +1,464 @@
+openapi: "3.0.0"
+info:
+  version: "1"
+  title: HesApp API
+  description: "API Documentation"
+servers:
+  - url: "https://hesapp.herokuapp.com"
+    description: "staging"
+paths:
+  /register:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/register_customer_schema'
+                - $ref: '#/components/schemas/register_restaurant_schema'
+      responses:
+        200:
+          description: Successfully registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User created successfully
+        400:
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid request data
+                  errors:
+                    type: string
+        409:
+          description: Email or username already registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: This email/username is already registered
+  /login:
+    post:
+      tags:
+        - Authentication
+      summary: Login an existing user
+      requestBody:
+        description: <b>NOTE:Use either username or email. Not both.</b>
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/login_schema'
+      responses:
+        200:
+          description: Successfully logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGl0eSI6InVzZXJuYW1lIiwiZXhwaXJlc19kZWx0YSI6IjIwMjAtMDEtMDFUMDA6MDA6MDBaIiwiaWF0IjoxNTc4Nzg3Mjg3fQ.jO1YG-LZu2vO8J7a6UyC6U_9KUvxlR5g5bZoYU5q5Kg
+        400:
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid request data
+                  errors:
+                    type: string
+        401:
+          description: Invalid username or password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid username or password
+  /get_profile:
+    get:
+      tags:
+        - Authentication
+      summary: Get the profile of a logged-in user
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: Successfully retrieved profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    example:
+                      {
+                        "username": "john_doe",
+                        "email": "johndoe@example.com",
+                        "role": "customer",
+                        "id": 1
+                      }
+        404:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User not found
+  /get_items:
+    get:
+      tags:
+        - Item
+      summary: Get a list of items
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+        - in: query
+          name: size
+          schema:
+            type: integer
+            default: 10
+          description: Number of items per page
+        - in: query
+          name: restaurant_id
+          schema:
+            type: integer
+          description: ID of the restaurant
+      responses:
+        200:
+          description: Successfully retrieved items
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      example:
+                        {
+                          "id": 1,
+                          "name": "Spaghetti",
+                          "price": 12.5,
+                          "restaurant_id": 1
+                        }
+  /create_item:
+    post:
+      tags:
+        - Item
+      summary: Creates an Item
+      description: Creates an Item for a restaurant
+      operationId: createItem
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - description
+                - price
+                - quantity
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                price:
+                  type: number
+                  format: float
+                quantity:
+                  type: integer
+      responses:
+        '200':
+          description: Item created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Item created successfully
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User not found
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid request data
+                  errors:
+                    type: object
+                    example: {"field": ["error message"]}
+        '409':
+          description: Item with that name already exists in the restaurant
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Item with that name already exists in the restaurant
+  /update_item:
+    put:
+      tags:
+        - Item
+      summary: Updates an Item
+      description: Updates an Item for a restaurant
+      operationId: updateItem
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+                description:
+                  type: string
+                price:
+                  type: number
+                  format: float
+                quantity:
+                  type: integer
+      responses:
+        '200':
+          description: Item updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Item updated successfully
+        '404':
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Item not found
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid request data
+                  errors:
+                    type: object
+                    example: {"field": ["error message"]}
+        '409':
+          description: Item with this name already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Item with this name already exists
+  /delete_item/{id}:
+    delete:
+      tags:
+        - Item
+      summary: Deletes an Item
+      description: Deletes an Item for a restaurant
+      operationId: deleteItem
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Id of the Item
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Item deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Item deleted successfully
+        '404':
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Item not found
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    register_customer_schema:
+      type: object
+      properties:
+        username:
+          type: string
+          required: 
+            - username
+        password:
+          type: string
+          required: 
+            - password
+        email:
+          type: string
+          required: 
+            - email
+        role:
+          type: string
+          required: 
+            - role
+    register_restaurant_schema:
+      type: object
+      properties:
+        username:
+          type: string
+          required: 
+            - username
+        password:
+          type: string
+          required: 
+            - password
+        email:
+          type: string
+          required: 
+            - email
+        role:
+          type: string
+          required: 
+            - role
+        restaurant_name:
+          type: string
+          required: 
+            - restaurant_name
+        restaurant_location:
+          type: string
+          required: 
+            - restaurant_location
+        restaurant_contact:
+          type: string
+          required: 
+            - restaurant_contact
+    login_schema:
+      type: object
+      required:
+        - password
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+
+

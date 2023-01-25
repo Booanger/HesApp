@@ -3,7 +3,6 @@ from flask_jwt_extended import (
     JWTManager,
     jwt_required,
 )
-from flask_swagger import swagger
 from flask_cors import CORS
 from .db import Base, get_db
 from .authentication_handler import AuthenticationHandler
@@ -54,14 +53,6 @@ APP.route("/delete_menu/<int:id>", methods=["DELETE"])(
 APP.route("/create_order", methods=["POST"])(jwt_required()(h_order.create_order))
 APP.route("/get_orders", methods=["GET"])(jwt_required()(h_order.get_orders))
 APP.route("/get_order", methods=["GET"])(jwt_required()(h_order.get_order))
-
-
-@APP.route("/swagger.json")
-def spec():
-    swag = swagger(APP)
-    swag["info"]["version"] = "1.0"
-    swag["info"]["title"] = "HesApp API"
-    return jsonify(swag)
 
 
 if __name__ == "__main__":
