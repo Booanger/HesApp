@@ -1,2 +1,0 @@
-pip install -r /path/to/requirements.txt
-web: gunicorn src.app:APP
