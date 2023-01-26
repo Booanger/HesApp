@@ -27,7 +27,7 @@ with APP.app_context():
             if table_name not in inspector.get_table_names():
                 Base.metadata.create_all(bind=db.engine, checkfirst=True)
     except Exception as e:
-        if "already exists" in e:
+        if "already exists" in str(e):
             pass
         else:
             raise e
