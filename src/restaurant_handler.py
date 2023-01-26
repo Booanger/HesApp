@@ -55,30 +55,25 @@ class RestaurantHandler:
         )
 
     def qrs(self):
-        try:
-            restaurant_names, data = zip(
-                *[
-                    (
-                        _.name,
-                        f"https://hesapp.herokuapp.com/get_items_and_menus?restaurant_id={_.id}",
-                    )
-                    for _ in self.db.session.query(Restaurant).all()
-                ]
-            )
+        restaurant_names, data = zip(
+            *[
+                (
+                    _.name,
+                    f"https://hesapp.herokuapp.com/get_items_and_menus?restaurant_id={_.id}",
+                )
+                for _ in self.db.session.query(Restaurant).all()
+            ]
+        )
 
-            # Create an empty list to store the QR code images
-            qr_codes = []
-            for i, d in enumerate(data):
-                # Encoding data using make() function
-                img = qrcode.make(d)
-                img.save(f"src/static/restaurant{i+1}.png")
-                qr_codes.append(f"restaurant{i+1}.png")
-            return render_template(
-                "qrs.html",
-                qr_codes=qr_codes,
-                restaurant_names=restaurant_names,
-            )
-        except ValueError:
-            return jsonify(
-                "Welcome to the HesApp. For now here is no restaurant available. Check back later"
-            )
+        # Create an empty list to store the QR code images
+        qr_codes = []
+        for i, d in enumerate(data):
+            # Encoding data using make() function
+            img = qrcode.make(d)
+            img.save(f"src/static/restaurant{i+1}.png")
+            qr_codes.append(f"restaurant{i+1}.png")
+        return render_template(
+            "qrs.html",
+            qr_codes=qr_codes,
+            restaurant_names=restaurant_names,
+        )
