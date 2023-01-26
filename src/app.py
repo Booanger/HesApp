@@ -24,7 +24,7 @@ with APP.app_context():
     inspector = inspect(db.engine)
     for table_name in Base.metadata.tables:
         if table_name not in inspector.get_table_names():
-            Base.metadata.create_all(bind=db.engine)
+            Base.metadata.create_all(bind=db.engine, checkfirst=True)
 
 h_auth = AuthenticationHandler(APP, db)
 h_order = OrderHandler(APP, db)
