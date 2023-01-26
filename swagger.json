@@ -391,7 +391,6 @@ paths:
                     type: string
                     example: Unauthorized
 
-
 components:
   securitySchemes:
     BearerAuth:
@@ -460,5 +459,4 @@ components:
           type: string
         password:
           type: string
-
 
