@@ -4,6 +4,7 @@ from flask_jwt_extended import (
     jwt_required,
 )
 from flask_cors import CORS
+from sqlalchemy import inspect
 from .db import Base, get_db
 from .authentication_handler import AuthenticationHandler
 from .order_handler import OrderHandler
@@ -20,8 +21,9 @@ db = get_db(APP)
 jwt = JWTManager(APP)
 
 with APP.app_context():
+    inspector = inspect(db.engine)
     for table_name in Base.metadata.tables:
-        if not db.engine.dialect.has_table(db.engine, table_name):
+        if table_name not in inspector.get_table_names():
             Base.metadata.create_all(bind=db.engine)
 
 h_auth = AuthenticationHandler(APP, db)
