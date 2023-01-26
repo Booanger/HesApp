@@ -9,6 +9,7 @@ from .authentication_handler import AuthenticationHandler
 from .order_handler import OrderHandler
 from .item_handler import ItemHandler
 from .menu_handler import MenuHandler
+from .restaurant_handler import RestaurantHandler
 
 APP = Flask(__name__)
 APP.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///hesapp.db"
@@ -25,6 +26,7 @@ h_auth = AuthenticationHandler(APP, db)
 h_order = OrderHandler(APP, db)
 h_item = ItemHandler(APP, db)
 h_menu = MenuHandler(APP, db)
+h_restaurant = RestaurantHandler(APP, db)
 
 # Authentication
 APP.route("/register", methods=["POST"])(h_auth.register)
@@ -32,6 +34,15 @@ APP.route("/login", methods=["POST"])(h_auth.login)
 APP.route("/get_profile", methods=["GET"])(jwt_required()(h_auth.get_profile))
 APP.route("/update_profile", methods=["PUT"])(jwt_required()(h_auth.update_profile))
 APP.route("/delete_profile", methods=["DELETE"])(jwt_required()(h_auth.delete_profile))
+
+# Restaurant
+APP.route("/get_restaurants", methods=["GET"])(
+    jwt_required()(h_restaurant.get_restaurants)
+)
+APP.route("/get_items_and_menus", methods=["GET"])(
+    jwt_required()(h_restaurant.get_items_and_menus)
+)
+APP.route("/", methods=["GET"])(h_restaurant.qrs)
 
 # Item
 APP.route("/create_item", methods=["POST"])(jwt_required()(h_item.create_item))
