@@ -19,8 +19,9 @@ CORS(APP)
 db = get_db(APP)
 jwt = JWTManager(APP)
 
-with APP.app_context():
-    Base.metadata.create_all(bind=db.engine)
+for table_name in Base.metadata.tables:
+    if not db.engine.dialect.has_table(db.engine, table_name):
+        Base.metadata.create_all(bind=db.engine)
 
 h_auth = AuthenticationHandler(APP, db)
 h_order = OrderHandler(APP, db)
