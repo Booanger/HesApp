@@ -21,10 +21,17 @@ db = get_db(APP)
 jwt = JWTManager(APP)
 
 with APP.app_context():
-    inspector = inspect(db.engine)
-    for table_name in Base.metadata.tables:
-        if table_name not in inspector.get_table_names():
-            Base.metadata.create_all(bind=db.engine, checkfirst=True)
+    try:
+        inspector = inspect(db.engine)
+        for table_name in Base.metadata.tables:
+            if table_name not in inspector.get_table_names():
+                Base.metadata.create_all(bind=db.engine, checkfirst=True)
+    except Exception as e:
+        if "already exists" in e:
+            pass
+        else:
+            raise e
+
 
 h_auth = AuthenticationHandler(APP, db)
 h_order = OrderHandler(APP, db)
