@@ -11,9 +11,14 @@ class MenuService:
         return category
 
     @staticmethod
-    def get_categories():
-        return MenuCategory.query.all()
-    
+    def get_category(id):
+        category = MenuCategory.query.get(id)
+        return category
+
+    @staticmethod
+    def get_categories_by_restaurant_id(restaurant_id):
+        return MenuCategory.query.filter_by(restaurant_id=restaurant_id).all()
+
     @staticmethod
     def update_category(category_id, updated_data):
         category = MenuCategory.query.get(category_id)
@@ -29,7 +34,7 @@ class MenuService:
         if category:
             db.session.delete(category)
             db.session.commit()
-            
+
     ################################################################
 
     @staticmethod
@@ -40,7 +45,12 @@ class MenuService:
         return item
 
     @staticmethod
-    def get_items(category_id):
+    def get_item(id):
+        item = MenuItem.query.get(id)
+        return item
+
+    @staticmethod
+    def get_items_by_category_id(category_id):
         return MenuItem.query.filter_by(category_id=category_id).all()
 
     @staticmethod

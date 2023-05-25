@@ -32,5 +32,5 @@ class UserService:
         db.session.commit()
 
     @staticmethod
-    def list_users():
+    def get_users():
         return User.query.all()

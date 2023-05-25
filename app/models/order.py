@@ -14,7 +14,7 @@ class Order(db.Model):
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'))
     status = db.Column(db.Enum(enums.OrderStatus))
     total_amount = db.Column(db.Float)
-    #restaurant = db.relationship('Restaurant')
+
     order_items = db.relationship('OrderItem', backref='order', lazy='dynamic')
     payment_transactions = db.relationship('PaymentTransaction', backref='order', lazy='dynamic')
 
@@ -27,5 +27,3 @@ class OrderItem(db.Model):
     menu_item_id = db.Column(db.Integer, db.ForeignKey('menu_items.id'))
     quantity = db.Column(db.Integer)
     price = db.Column(db.Float)
-    #order = db.relationship('Order')
-    #menu_item = db.relationship('MenuItem')

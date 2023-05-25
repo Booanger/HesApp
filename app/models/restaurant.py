@@ -16,3 +16,14 @@ class Restaurant(db.Model):
     
     menu_categories = db.relationship('MenuCategory', backref='restaurant', lazy='dynamic')
     orders = db.relationship('Order', backref='restaurant', lazy='dynamic')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'staff_user_id': self.staff_user_id,
+            'name': self.name,
+            'description': self.description,
+            'address': self.address,
+            'phone': self.phone,
+            'logo': self.logo,
+        }

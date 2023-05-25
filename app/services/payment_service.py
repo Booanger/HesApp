@@ -28,5 +28,5 @@ class PaymentService:
         db.session.commit()
 
     @staticmethod
-    def list_payments():
+    def get_payments():
         return PaymentTransaction.query.all()

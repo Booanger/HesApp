@@ -1,26 +1,30 @@
 from cerberus import Validator
 
-def validate_json_data(data, schema):
-    if not isinstance(data, dict):
-        return False, {"msg": "Data is not a valid JSON object"}
 
-    if not schema.validate(data):
-        return False, {"msg": "Bad request parameters", "errors": schema.errors}
-
-    return True, data
-
-register_validator = Validator({
-    'first_name': {'type': 'string', 'minlength': 1, 'required': True},
-    'last_name': {'type': 'string', 'minlength': 1, 'required': True},
-    'email': {'type': 'string', 'minlength': 5, 'required': True},
-    'password': {'type': 'string', 'minlength': 5, 'required': True},
+register_customer_validator = Validator({
+    'first_name': {'type': 'string', 'required': True},
+    'last_name': {'type': 'string', 'required': True},
+    'email': {'type': 'string', 'required': True},
+    'password': {'type': 'string', 'required': True, 'minlength': 6},
     'phone': {'type': 'string', 'minlength': 1, 'required': True},
-    'role': {'type': 'string', 'allowed': ['customer', 'staff'], 'required': True},
+})
+
+register_staff_validator = Validator({
+    'first_name': {'type': 'string', 'required': True},
+    'last_name': {'type': 'string', 'required': True},
+    'email': {'type': 'string', 'required': True},
+    'password': {'type': 'string', 'required': True, 'minlength': 6},
+    'phone': {'type': 'string', 'minlength': 1, 'required': True},
+    'restaurant_name': {'type': 'string', 'required': True},
+    'restaurant_description': {'type': 'string', 'required': True},
+    'restaurant_address': {'type': 'string', 'required': True},
+    'restaurant_phone': {'type': 'string', 'required': True},
+    'restaurant_logo': {'type': 'string', 'required': False},
 })
 
 login_validator = Validator({
     'email': {'type': 'string', 'required': True, 'empty': False, 'maxlength': 120},
-    'password': {'type': 'string', 'required': True, 'empty': False, 'minlength': 8},
+    'password': {'type': 'string', 'required': True, 'empty': False, 'minlength': 6},
 })
 
 update_user_validator = Validator({
@@ -49,4 +53,37 @@ update_user_validator = Validator({
     }
 })
 
-# You can add more validators here for other routes or data structures
+restaurant_update_validator = Validator({
+    'name': {'type': 'string', 'required': False},
+    'description': {'type': 'string', 'required': False},
+    'address': {'type': 'string', 'required': False},
+    'phone': {'type': 'string', 'required': False},
+    'logo': {'type': 'string', 'required': False},
+})
+
+create_menu_category_validator = Validator({
+    # 'restaurant_id': {'type': 'integer', 'required': True},
+    'name': {'type': 'string', 'required': True, 'minlength': 1},
+})
+
+create_menu_item_validator = Validator({
+    'category_id': {'type': 'integer', 'required': True},
+    'name': {'type': 'string', 'required': True, 'minlength': 1},
+    'description': {'type': 'string', 'required': False, 'minlength': 1},
+    'price': {'type': 'float', 'required': True},
+    'image': {'type': 'string', 'required': False},
+})
+
+update_menu_category_validator = Validator({
+    # 'restaurant_id': {'type': 'integer', 'required': True},
+    'name': {'type': 'string', 'required': True, 'minlength': 1},
+})
+
+update_menu_item_validator = Validator({
+    'category_id': {'type': 'integer', 'required': False},
+    'name': {'type': 'string', 'required': False, 'minlength': 1},
+    'description': {'type': 'string', 'required': False, 'minlength': 1},
+    'price': {'type': 'float', 'required': False},
+    'image': {'type': 'string', 'required': False},
+})
+# TODO add more validators here for other routes or data structures

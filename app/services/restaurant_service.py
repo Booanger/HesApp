@@ -15,6 +15,10 @@ class RestaurantService:
         return Restaurant.query.get(id)
 
     @staticmethod
+    def get_restaurant_by_staff_user_id(staff_user_id):
+        return Restaurant.query.filter_by(staff_user_id=staff_user_id).first()
+
+    @staticmethod
     def update_restaurant(id, data):
         restaurant = Restaurant.query.get(id)
         for key, value in data.items():
@@ -28,5 +32,5 @@ class RestaurantService:
         db.session.commit()
 
     @staticmethod
-    def list_restaurants():
+    def get_restaurants():
         return Restaurant.query.all()
