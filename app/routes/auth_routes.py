@@ -30,7 +30,7 @@ class Login(Resource):
         if not user:
             return {"msg": "User not found"}, 404
 
-        if not check_password_hash(user.password, data['password'], method="scrypt"):
+        if not check_password_hash(user.password, data['password']):
             return {"msg": "Bad username or password"}, 401
 
         access_token = create_access_token(identity=user.id, expires_delta=timedelta(days=365*100))
