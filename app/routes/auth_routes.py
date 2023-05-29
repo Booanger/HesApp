@@ -3,6 +3,7 @@ from flask_jwt_extended import create_access_token
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
+from datetime import timedelta
 
 from ..services import UserService, RestaurantService
 from ..utils.validations import register_customer_validator, register_staff_validator, login_validator
@@ -29,10 +30,10 @@ class Login(Resource):
         if not user:
             return {"msg": "User not found"}, 404
 
-        if not check_password_hash(user.password, data['password']):
+        if not check_password_hash(user.password, data['password'], method="scrypt"):
             return {"msg": "Bad username or password"}, 401
 
-        access_token = create_access_token(identity=user.id)
+        access_token = create_access_token(identity=user.id, expires_delta=timedelta(days=365*100))
         return {'access_token': access_token}, 200
 
 @api.route('/register')
