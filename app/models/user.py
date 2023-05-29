@@ -1,4 +1,6 @@
 from enum import Enum
+from sqlalchemy import Column, Integer, String, Enum, ForeignKey
+from sqlalchemy.orm import relationship, query_expression
 from . import db, enums
 
 print("user.py")
@@ -6,17 +8,18 @@ print("user.py")
 class User(db.Model):
     __tablename__ = 'users'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    first_name = db.Column(db.String(50))
-    last_name = db.Column(db.String(50))
-    email = db.Column(db.String(120), unique=True)
-    password = db.Column(db.String(200))
-    phone = db.Column(db.String(20))
-    role = db.Column(db.Enum(enums.UserRole))
-    
-    orders = db.relationship('Order', backref='user', lazy='dynamic')
-    restaurants = db.relationship('Restaurant', backref='staff_user', lazy='dynamic')
+    id: int = Column(Integer, primary_key=True, autoincrement=True)
+    first_name: str = Column(String(50))
+    last_name: str = Column(String(50))
+    email: str = Column(String(120), unique=True)
+    password: str = Column(String(200))
+    phone: str = Column(String(20))
+    role: enums.UserRole = Column(Enum(enums.UserRole))
 
+    orders: query_expression = relationship('Order', backref='user', lazy='dynamic')
+    restaurant: query_expression = relationship('Restaurant', uselist=False, viewonly=True)
+
+    # @staticmethod
     def to_dict(self):
         data = {
             'id': self.id,
@@ -27,8 +30,7 @@ class User(db.Model):
             'phone': self.phone,
         }
 
-        if self.role == enums.UserRole.STAFF and self.restaurants.first():
-            restaurant = self.restaurants.first()
-            data['restaurant'] = restaurant.to_dict()
+        if self.role == enums.UserRole.STAFF and self.restaurant:
+            data['restaurant'] = self.restaurant.to_dict()
 
         return data

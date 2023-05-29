@@ -7,7 +7,7 @@ from ..utils.decorators import roles_required, validate_json_input
 from .. import enums
 
 restaurant_bp = Blueprint('restaurant', __name__, url_prefix='/restaurant')
-
+"""
 @restaurant_bp.route('/', methods=['GET'])
 def get_all():
     restaurants = RestaurantService.get_restaurants()
@@ -37,3 +37,4 @@ def update_restaurant(data):
         return jsonify({"msg": "Restaurant updated successfully"}), 200
     else:
         return jsonify({"msg": "Restaurant update failed"}), 500
+"""

@@ -3,9 +3,12 @@ from flask_jwt_extended import get_jwt_identity
 from functools import wraps
 from ..services import UserService
 
-def roles_required(*roles):
+def roles_required(*roles, api):
     def decorator(f):
         @wraps(f)
+        @api.doc(responses={
+            403: 'Access denied'
+        })
         def wrapper(*args, **kwargs):
             user_id = get_jwt_identity()
             user = UserService.get_user_by_id(user_id)
@@ -34,9 +37,12 @@ def validate_json_input(schema):
     return decorator
 """
 
-def validate_json_input(validator):
+def validate_json_input(validator, api):
     def decorator(f):
         @wraps(f)
+        @api.doc(responses={
+            400: 'Missing JSON in request / Missing JSON data / Bad Request'
+        })
         def decorated_function(*args, **kwargs):
             if not request.is_json:
                 return jsonify({"msg": "Missing JSON in request"}), 400

@@ -10,7 +10,7 @@ from ..utils.decorators import roles_required, validate_json_input
 from .. import enums
 
 menu_bp = Blueprint('menu', __name__, url_prefix='/menu')
-
+"""
 @menu_bp.route('/category', methods=['POST'])
 @jwt_required()
 @roles_required(enums.UserRole.STAFF)
@@ -109,3 +109,4 @@ def delete_menu_item(id):
 
     MenuService.delete_item(id)
     return jsonify({"msg": "Item deleted"}), 200
+"""
