@@ -12,11 +12,13 @@ class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'))
+    table_id = db.Column(db.Integer, db.ForeignKey('tables.id'))  # New table_id field
     status = db.Column(db.Enum(enums.OrderStatus))
     total_amount = db.Column(db.Float)
 
     order_items = db.relationship('OrderItem', backref='order', lazy='dynamic')
     payment_transactions = db.relationship('PaymentTransaction', backref='order', lazy='dynamic')
+    table = db.relationship('Table', backref=db.backref('orders', lazy=True))  # Relationship with Table
 
 
 class OrderItem(db.Model):

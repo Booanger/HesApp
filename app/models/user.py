@@ -1,25 +1,22 @@
 from enum import Enum
 from sqlalchemy import Column, Integer, String, Enum, ForeignKey
-from sqlalchemy.orm import relationship, query_expression
+from sqlalchemy.orm import relationship
 from . import db, enums
-
-print("user.py")
 
 class User(db.Model):
     __tablename__ = 'users'
 
-    id: int = Column(Integer, primary_key=True, autoincrement=True)
-    first_name: str = Column(String(50))
-    last_name: str = Column(String(50))
-    email: str = Column(String(120), unique=True)
-    password: str = Column(String(200))
-    phone: str = Column(String(20))
-    role: enums.UserRole = Column(Enum(enums.UserRole))
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    first_name = Column(String(50))
+    last_name = Column(String(50))
+    email = Column(String(120), unique=True)
+    password = Column(String(200))
+    phone = Column(String(20))
+    role = Column(Enum(enums.UserRole))
 
-    orders: query_expression = relationship('Order', backref='user', lazy='dynamic')
-    restaurant: query_expression = relationship('Restaurant', uselist=False, viewonly=True)
+    orders = relationship('Order', backref='user', lazy='dynamic')
+    restaurant = relationship('Restaurant', uselist=False, viewonly=True)
 
-    # @staticmethod
     def to_dict(self):
         data = {
             'id': self.id,
