@@ -1,15 +1,19 @@
-from . import db
+# from enum import Enum
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
+# from . import db, enums
+from .base_model import BaseModel
 
-class Table(db.Model):
+
+class Table(BaseModel):
     __tablename__ = 'tables'
 
-    id = db.Column(db.Integer, primary_key=True)
-    restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'), nullable=False)
-    name = db.Column(db.String(50), nullable=False)
-    description = db.Column(db.String(200))
-    capacity = db.Column(db.Integer, nullable=False)
+    restaurant_id = Column(Integer, ForeignKey('restaurants.id'), nullable=False)
+    name = Column(String(50), nullable=False)
+    description = Column(String(200))
+    capacity = Column(Integer, nullable=False)
 
-    restaurant = db.relationship('Restaurant', backref=db.backref('tables', lazy=True))
+    restaurant = relationship('Restaurant', backref='tables', lazy=True)
 
     def to_dict(self):
         return {

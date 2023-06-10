@@ -1,31 +1,30 @@
 from enum import Enum
-from . import db
-from .user import User
-from .restaurant import Restaurant
+# from . import db
+# from .user import User
+# from .restaurant import Restaurant
 from .. import enums
+from .base_model import BaseModel
+from sqlalchemy import Column, Integer, String, Enum, ForeignKey, Float
+from sqlalchemy.orm import relationship
 
-print("order.py")
-
-class Order(db.Model):
+class Order(BaseModel):
     __tablename__ = 'orders'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'))
-    table_id = db.Column(db.Integer, db.ForeignKey('tables.id'))  # New table_id field
-    status = db.Column(db.Enum(enums.OrderStatus))
-    total_amount = db.Column(db.Float)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    restaurant_id = Column(Integer, ForeignKey('restaurants.id'))
+    table_id = Column(Integer, ForeignKey('tables.id'))  # New table_id field
+    status = Column(Enum(enums.OrderStatus))
+    total_amount = Column(Float)
 
-    order_items = db.relationship('OrderItem', backref='order', lazy='dynamic')
-    payment_transactions = db.relationship('PaymentTransaction', backref='order', lazy='dynamic')
-    table = db.relationship('Table', backref=db.backref('orders', lazy=True))  # Relationship with Table
+    order_items = relationship('OrderItem', backref='order', lazy='dynamic')
+    payment_transactions = relationship('PaymentTransaction', backref='order', lazy='dynamic')
+    table = relationship('Table', backref='orders', lazy=True)
 
 
-class OrderItem(db.Model):
+class OrderItem(BaseModel):
     __tablename__ = 'order_items'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    order_id = db.Column(db.Integer, db.ForeignKey('orders.id'))
-    menu_item_id = db.Column(db.Integer, db.ForeignKey('menu_items.id'))
-    quantity = db.Column(db.Integer)
-    price = db.Column(db.Float)
+    order_id = Column(Integer, ForeignKey('orders.id'))
+    menu_item_id = Column(Integer, ForeignKey('menu_items.id'))
+    quantity = Column(Integer)
+    price = Column(Float)

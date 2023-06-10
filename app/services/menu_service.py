@@ -1,70 +1,18 @@
-from ..models import db, MenuCategory, MenuItem
+from .base_service import BaseService
+from ..models import MenuCategory, MenuItem
 
-print("menu service.py")
 
-class MenuService:
-    @staticmethod
-    def create_category(data):
-        category = MenuCategory(**data)
-        db.session.add(category)
-        db.session.commit()
-        return category
+class MenuCategoryService(BaseService):
+    model = MenuCategory
 
-    @staticmethod
-    def get_category(id):
-        category = MenuCategory.query.get(id)
-        return category
+    @classmethod
+    def get_all_by_restaurant_id(self, restaurant_id):
+        return self.model.query.filter_by(restaurant_id=restaurant_id).all()
 
-    @staticmethod
-    def get_categories_by_restaurant_id(restaurant_id):
-        return MenuCategory.query.filter_by(restaurant_id=restaurant_id).all()
 
-    @staticmethod
-    def update_category(category_id, updated_data):
-        category = MenuCategory.query.get(category_id)
-        if category:
-            for key, value in updated_data.items():
-                setattr(category, key, value)
-            db.session.commit()
-        return category
+class MenuItemService(BaseService):
+    model = MenuItem
 
-    @staticmethod
-    def delete_category(category_id):
-        category = MenuCategory.query.get(category_id)
-        if category:
-            db.session.delete(category)
-            db.session.commit()
-
-    ################################################################
-
-    @staticmethod
-    def create_item(data):
-        item = MenuItem(**data)
-        db.session.add(item)
-        db.session.commit()
-        return item
-
-    @staticmethod
-    def get_item(id):
-        item = MenuItem.query.get(id)
-        return item
-
-    @staticmethod
-    def get_items_by_category_id(category_id):
-        return MenuItem.query.filter_by(category_id=category_id).all()
-
-    @staticmethod
-    def update_item(item_id, updated_data):
-        item = MenuItem.query.get(item_id)
-        if item:
-            for key, value in updated_data.items():
-                setattr(item, key, value)
-            db.session.commit()
-        return item
-
-    @staticmethod
-    def delete_item(item_id):
-        item = MenuItem.query.get(item_id)
-        if item:
-            db.session.delete(item)
-            db.session.commit()
+    @classmethod
+    def get_all_by_category_id(self, category_id):
+        return self.model.query.filter_by(category_id=category_id).all()

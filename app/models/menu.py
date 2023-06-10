@@ -1,17 +1,16 @@
-from . import db
-from .restaurant import Restaurant
+# from . import db
+# from .restaurant import Restaurant
+from .base_model import BaseModel
+from sqlalchemy import Column, Integer, String, Enum, ForeignKey, Float, Text
+from sqlalchemy.orm import relationship
 
-print("menu.py")
-
-
-class MenuCategory(db.Model):
+class MenuCategory(BaseModel):
     __tablename__ = 'menu_categories'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'))
-    name = db.Column(db.String(100))
-    
-    menu_items = db.relationship('MenuItem', backref='category', lazy='dynamic')
+    restaurant_id = Column(Integer, ForeignKey('restaurants.id'))
+    name = Column(String(100))
+
+    menu_items = relationship('MenuItem', backref='category', lazy='dynamic')
 
     def to_dict(self):
         return {
@@ -21,17 +20,16 @@ class MenuCategory(db.Model):
         }
 
 
-class MenuItem(db.Model):
+class MenuItem(BaseModel):
     __tablename__ = 'menu_items'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    category_id = db.Column(db.Integer, db.ForeignKey('menu_categories.id'))
-    name = db.Column(db.String(100))
-    description = db.Column(db.Text)
-    price = db.Column(db.Float)
-    image = db.Column(db.String(200))
+    category_id = Column(Integer, ForeignKey('menu_categories.id'))
+    name = Column(String(100))
+    description = Column(Text)
+    price = Column(Float)
+    image = Column(String(200))
 
-    order_items = db.relationship('OrderItem', backref='menu_item', lazy='dynamic')
+    order_items = relationship('OrderItem', backref='menu_item', lazy='dynamic')
 
     def to_dict(self):
         return {

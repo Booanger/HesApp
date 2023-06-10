@@ -1,12 +1,13 @@
 from enum import Enum
-from sqlalchemy import Column, Integer, String, Enum, ForeignKey
+from sqlalchemy import Column, String, Enum
 from sqlalchemy.orm import relationship
-from . import db, enums
+from . import enums
+from .base_model import BaseModel
 
-class User(db.Model):
+
+class User(BaseModel):
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
     first_name = Column(String(50))
     last_name = Column(String(50))
     email = Column(String(120), unique=True)

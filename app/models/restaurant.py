@@ -1,21 +1,21 @@
-from . import db
-from .user import User
+# from . import db
+# from .user import User
+from .base_model import BaseModel
+from sqlalchemy import Column, Integer, String, ForeignKey, Text
+from sqlalchemy.orm import relationship
 
-print("restaurant.py")
-
-class Restaurant(db.Model):
+class Restaurant(BaseModel):
     __tablename__ = 'restaurants'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    staff_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    name = db.Column(db.String(100))
-    description = db.Column(db.Text)
-    address = db.Column(db.String(200))
-    phone = db.Column(db.String(20))
-    logo = db.Column(db.String(200))
-    
-    menu_categories = db.relationship('MenuCategory', backref='restaurant', lazy='dynamic')
-    orders = db.relationship('Order', backref='restaurant', lazy='dynamic')
+    staff_user_id = Column(Integer, ForeignKey('users.id'))
+    name = Column(String(100))
+    description = Column(Text)
+    address = Column(String(200))
+    phone = Column(String(20))
+    logo = Column(String(200))
+
+    menu_categories = relationship('MenuCategory', backref='restaurant', lazy='dynamic')
+    orders = relationship('Order', backref='restaurant', lazy='dynamic')
 
     def to_dict(self):
         return {
