@@ -1,9 +1,10 @@
-from flask_restx import fields, ValidationError
-from flask_restx.inputs import email
-from flask_restx.reqparse import RequestParser
-import re
-import phonenumbers
-from phonenumbers import phonenumberutil
+from flask_restx import fields  # , ValidationError
+
+# from flask_restx.inputs import email
+# from flask_restx.reqparse import RequestParser
+# import re
+# import phonenumbers
+# from phonenumbers import phonenumberutil
 
 
 class Singleton(type):
