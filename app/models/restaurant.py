@@ -16,6 +16,7 @@ class Restaurant(BaseModel):
 
     menu_categories = relationship('MenuCategory', backref='restaurant', lazy='dynamic')
     orders = relationship('Order', backref='restaurant', lazy='dynamic')
+    tables = relationship('Table', backref='restaurant', lazy='dynamic')
 
     def to_dict(self):
         return {
