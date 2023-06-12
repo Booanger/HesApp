@@ -19,13 +19,15 @@ class UserService:
         )
         return {"access_token": access_token}, 200
 
-    def register_customer(first_name, last_name, email, password, phone):
-        customer = User.query.filter_by(email=email).first()
-        if customer:
-            return {"error": "Email already registered"}, 409
+    def register_customer(username, email, password, phone):
+        existing_user = User.query.filter(
+            (User.email == email) | (User.username == username)
+        ).first()
+        if existing_user:
+            return {"error": "Username or email already registered"}, 409
+
         customer = User(
-            first_name=first_name,
-            last_name=last_name,
+            username=username,
             email=email,
             password=generate_password_hash(password, method="scrypt"),
             phone=phone,
@@ -37,13 +39,12 @@ class UserService:
         access_token = create_access_token(identity=customer.id)
 
         return {
-            "message": f"User {customer.first_name} registered successfully",
+            "message": f"User {customer.username} registered successfully",
             "access_token": access_token,
         }, 200
 
     def register_staff(
-        first_name,
-        last_name,
+        username,
         email,
         password,
         phone,
@@ -53,12 +54,14 @@ class UserService:
         restaurant_phone,
         restaurant_logo,
     ):
-        staff = User.query.filter_by(email=email).first()
-        if staff:
-            return {"error": "Email already registered"}, 409
+        existing_user = User.query.filter(
+            (User.email == email) | (User.username == username)
+        ).first()
+        if existing_user:
+            return {"error": "Username or email already registered"}, 409
+
         staff = User(
-            first_name=first_name,
-            last_name=last_name,
+            username=username,
             email=email,
             password=generate_password_hash(password, method="scrypt"),
             phone=phone,
@@ -80,7 +83,7 @@ class UserService:
 
         access_token = create_access_token(identity=staff.id)
         return {
-            "message": f"Staff {staff.first_name} and their restaurant {restaurant.name} registered successfully",
+            "message": f"Staff {staff.username} and their restaurant {restaurant.name} registered successfully",
             "access_token": access_token,
         }, 200
 
@@ -98,11 +101,16 @@ class UserService:
             hashed_password = generate_password_hash(data["password"], method="sha256")
             data["password"] = hashed_password
 
+        if "username" in data:
+            existing_user = User.query.filter(
+                (User.username == data["username"]) & (User.id != customer_id)
+            ).first()
+            if existing_user:
+                return {"error": "Username already exists"}, 409
+
         customer = User.query.filter_by(id=customer_id, role=UserRole.CUSTOMER).first()
         if customer:
-            customer.first_name = data.get("first_name", customer.first_name)
-            customer.last_name = data.get("last_name", customer.last_name)
-            customer.email = data.get("email", customer.email)
+            customer.username = data.get("username", customer.username)
             customer.password = data.get("password", customer.password)
             customer.phone = data.get("phone", customer.phone)
             db.session.commit()
@@ -132,13 +140,18 @@ class UserService:
             hashed_password = generate_password_hash(data["password"], method="sha256")
             data["password"] = hashed_password
 
+        if "username" in data:
+            existing_user = User.query.filter(
+                (User.username == data["username"]) & (User.id != staff_id)
+            ).first()
+            if existing_user:
+                return {"error": "Username already exists"}, 409
+
         staff = User.query.filter_by(id=staff_id, role=UserRole.STAFF).first()
         restaurant = Restaurant.query.filter_by(staff_user_id=staff.id).first()
         if staff and restaurant:
-            staff.first_name = data.get("first_name", staff.first_name)
-            staff.last_name = data.get("last_name", staff.last_name)
+            staff.username = data.get("username", staff.username)
             staff.password = data.get("password", staff.password)
-            # staff.email = data.get("email", staff.email)
             staff.phone = data.get("phone", staff.phone)
             restaurant.name = data.get("restaurant_name", restaurant.name)
             restaurant.description = data.get(

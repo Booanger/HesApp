@@ -34,7 +34,10 @@ class RestxValidation(metaclass=Singleton):
                     },
                 ),
                 "password": fields.String(
-                    required=True, description="User password", min_length=6
+                    required=True,
+                    description="User password",
+                    min_length=6,
+                    max_length=25,
                 ),
             },
             strict=True,
@@ -43,11 +46,8 @@ class RestxValidation(metaclass=Singleton):
         self.register_customer_model = api.model(
             "RegisterCustomer",
             {
-                "first_name": fields.String(
-                    required=True, description="First name", max_length=120
-                ),
-                "last_name": fields.String(
-                    required=True, description="Last name", max_length=120
+                "username": fields.String(
+                    required=True, description="Username", min_length=3, max_length=100
                 ),
                 "email": fields.String(
                     required=True,
@@ -74,11 +74,8 @@ class RestxValidation(metaclass=Singleton):
         self.register_staff_model = api.model(
             "RegisterStaff",
             {
-                "first_name": fields.String(
-                    required=True, description="First name", max_length=50
-                ),
-                "last_name": fields.String(
-                    required=True, description="Last name", max_length=50
+                "username": fields.String(
+                    required=True, description="Username", min_length=3, max_length=100
                 ),
                 "email": fields.String(
                     required=True,
@@ -111,23 +108,17 @@ class RestxValidation(metaclass=Singleton):
                 "restaurant_phone": fields.String(
                     required=True, description="Restaurant phone", max_length=20
                 ),
-                "restaurant_logo": fields.String(
-                    required=False, description="Restaurant logo", max_length=200
-                ),
             },
         )
 
         self.update_customer_model = api.model(
             "UpdateUser",
             {
-                "first_name": fields.String(
+                "username": fields.String(
                     required=False,
-                    description="First name",
-                    min_length=1,
-                    max_length=50,
-                ),
-                "last_name": fields.String(
-                    required=False, description="Last name", min_length=1, max_length=50
+                    description="Username",
+                    min_length=3,
+                    max_length=100,
                 ),
                 "phone": fields.String(
                     required=False,
@@ -136,7 +127,7 @@ class RestxValidation(metaclass=Singleton):
                     max_length=20,
                 ),
                 "password": fields.String(
-                    required=False, description="Password", min_length=8
+                    required=False, description="Password", min_length=6, max_length=25
                 ),
             },
         )
@@ -144,35 +135,29 @@ class RestxValidation(metaclass=Singleton):
         self.update_staff_model = api.model(
             "UpdateStaff",
             {
-                "first_name": fields.String(
-                    required=True, description="First name", max_length=50
-                ),
-                "last_name": fields.String(
-                    required=True, description="Last name", max_length=50
+                "username": fields.String(
+                    required=False, description="Username", min_length=3, max_length=100
                 ),
                 "password": fields.String(
-                    required=True, description="Password", min_length=6, max_length=25
+                    required=False, description="Password", min_length=6, max_length=25
                 ),
                 "phone": fields.String(
-                    required=True,
+                    required=False,
                     description="Phone number",
                     min_length=1,
                     max_length=20,
                 ),
                 "restaurant_name": fields.String(
-                    required=True, description="Restaurant name", max_length=100
+                    required=False, description="Restaurant name", max_length=100
                 ),
                 "restaurant_description": fields.String(
-                    required=True, description="Restaurant description"
+                    required=False, description="Restaurant description"
                 ),
                 "restaurant_address": fields.String(
-                    required=True, description="Restaurant address", max_length=200
+                    required=False, description="Restaurant address", max_length=200
                 ),
                 "restaurant_phone": fields.String(
-                    required=True, description="Restaurant phone", max_length=20
-                ),
-                "restaurant_logo": fields.String(
-                    required=False, description="Restaurant logo", max_length=200
+                    required=False, description="Restaurant phone", max_length=20
                 ),
             },
         )
@@ -195,7 +180,6 @@ class RestxValidation(metaclass=Singleton):
                     min_length=10,
                     max_length=20,
                 ),
-                "logo": fields.String(required=False, description="Restaurant logo"),
             },
         )
 
