@@ -47,7 +47,7 @@ class GetTablesByRestaurant(Resource):
     @jwt_required()
     @roles_required(enums.UserRole.STAFF, enums.UserRole.CUSTOMER, api=api)
     def get(self, restaurant_id):
-        return RestaurantService.get_menu_categories_by_restaurant_id(restaurant_id)
+        return RestaurantService.get_tables_by_restaurant_id(restaurant_id)
 
 
 @api.route("/<int:table_id>")

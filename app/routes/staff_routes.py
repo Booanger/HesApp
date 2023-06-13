@@ -22,7 +22,7 @@ class Staff(Resource):
         },
     )
     @jwt_required()
-    @roles_required(enums.UserRole.CUSTOMER, api=api)
+    @roles_required(enums.UserRole.STAFF, api=api)
     def get(self):
         user_id = get_jwt_identity()
         return UserService.get_staff(user_id)
@@ -37,7 +37,7 @@ class Staff(Resource):
     )
     @api.expect(restx_validation.update_staff_model, validate=True)
     @jwt_required()
-    @roles_required(enums.UserRole.CUSTOMER, api=api)
+    @roles_required(enums.UserRole.STAFF, api=api)
     def put(self):
         data = api.payload
         user_id = get_jwt_identity()
