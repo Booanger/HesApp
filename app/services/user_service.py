@@ -52,7 +52,7 @@ class UserService:
         restaurant_description,
         restaurant_address,
         restaurant_phone,
-        restaurant_logo,
+        # restaurant_logo,
     ):
         existing_user = User.query.filter(
             (User.email == email) | (User.username == username)
@@ -75,7 +75,7 @@ class UserService:
             description=restaurant_description,
             address=restaurant_address,
             phone=restaurant_phone,
-            logo=restaurant_logo,
+            # logo=restaurant_logo,
         )
         db.session.add(restaurant)
 
@@ -130,7 +130,7 @@ class UserService:
             staff["restaurant_description"] = restaurant.description
             staff["restaurant_address"] = restaurant.address
             staff["restaurant_phone"] = restaurant.phone
-            staff["restaurant_logo"] = restaurant.logo
+            # staff["restaurant_logo"] = restaurant.logo
             return staff, 200
         return {"msg": "Staff not found"}, 404
 
@@ -159,7 +159,7 @@ class UserService:
             )
             restaurant.address = data.get("restaurant_address", restaurant.address)
             restaurant.phone = data.get("restaurant_phone", restaurant.phone)
-            restaurant.logo = data.get("restaurant_logo", restaurant.logo)
+            # restaurant.logo = data.get("restaurant_logo", restaurant.logo)
             db.session.commit()
             return {"msg": "Staff updated successfully"}, 200
         return {"msg": "Staff update failed"}, 500
