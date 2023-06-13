@@ -14,7 +14,9 @@ def roles_required(*roles, api):
             }
         )
         def wrapper(*args, **kwargs):
-            user_id = get_jwt_identity()
+            user_id = get_jwt_identity(optional=True)
+            if not user_id:
+                return {"message": "Missing Authorization Header"}, 401
             user_role = UserService.get_role(user_id)
             if not user_role or user_role not in roles:
                 return {"msg": "Access denied"}, 403

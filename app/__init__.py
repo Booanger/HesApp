@@ -1,7 +1,6 @@
 from flask import Flask
 from config import Config
 from flask_jwt_extended import JWTManager
-from flask_jwt_extended.exceptions import NoAuthorizationError
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_restx import Api
@@ -34,11 +33,6 @@ api = Api(
         "Bearer Auth": {"type": "apiKey", "in": "header", "name": "Authorization"}
     },
 )
-
-
-@app.errorhandler(NoAuthorizationError)
-def handle_no_authorization_error(error):
-    return {"message": "Missing Authorization Header"}, 401
 
 
 api.add_namespace(auth_routes.api, path="/auth")
