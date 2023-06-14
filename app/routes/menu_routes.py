@@ -17,10 +17,10 @@ class CreateMenuCategory(Resource):
     @api.doc(
         security="Bearer Auth",
         responses={
-            200: "Category created",
+            201: "Category created",
             401: "Missing Authorization Header",
             403: "Access denied",
-            409: "Category already exists",
+            500: "Internal Server Error"
         },
     )
     @jwt_required()
@@ -41,7 +41,7 @@ class GetMenuCategoriesByRestaurant(Resource):
             200: "Success",
             401: "Missing Authorization Header",
             403: "Access denied",
-            404: "No categories found for this restaurant",
+            500: "Internal Server Error"
         },
     )
     @jwt_required()
@@ -72,10 +72,10 @@ class UpdateDeleteMenuCategory(Resource):
     @api.doc(
         security="Bearer Auth",
         responses={
-            200: "Category deleted",
+            204: "Category deleted",
             401: "Missing Authorization Header",
             403: "Access denied",
-            404: "Category not found or not authorized",
+            404: "Category not found",
         },
     )
     @jwt_required()

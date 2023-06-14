@@ -41,7 +41,7 @@ class UserService:
         return {
             "message": f"User {customer.username} registered successfully",
             "access_token": access_token,
-        }, 200
+        }, 201
 
     def register_staff(
         username,
@@ -85,7 +85,7 @@ class UserService:
         return {
             "message": f"Staff {staff.username} and their restaurant {restaurant.name} registered successfully",
             "access_token": access_token,
-        }, 200
+        }, 201
 
     # Customer Related
     def get_customer(customer_id):
