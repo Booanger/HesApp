@@ -125,7 +125,7 @@ class RestaurantService:
         # Retrieve menu item information
         items = MenuItem.query.filter_by(category_id=category_id).all()
         if not items or len(items) == 0:
-            return {"msg": "No items found for this category"}, 404
+            return [], 200
         return [item.to_dict() for item in items], 200
 
     def update_menu_item(item_id, data, user_id):
