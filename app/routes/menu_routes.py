@@ -20,7 +20,7 @@ class CreateMenuCategory(Resource):
             201: "Category created",
             401: "Missing Authorization Header",
             403: "Access denied",
-            500: "Internal Server Error"
+            500: "Internal Server Error",
         },
     )
     @jwt_required()
@@ -41,7 +41,7 @@ class GetMenuCategoriesByRestaurant(Resource):
             200: "Success",
             401: "Missing Authorization Header",
             403: "Access denied",
-            500: "Internal Server Error"
+            500: "Internal Server Error",
         },
     )
     @jwt_required()
@@ -59,7 +59,8 @@ class UpdateDeleteMenuCategory(Resource):
             200: "Category updated",
             401: "Missing Authorization Header",
             403: "Access denied",
-            404: "Category not found or not authorized",
+            404: "Category not found",
+            500: "Internal Server Error",
         },
     )
     @jwt_required()
@@ -76,6 +77,7 @@ class UpdateDeleteMenuCategory(Resource):
             401: "Missing Authorization Header",
             403: "Access denied",
             404: "Category not found",
+            500: "Internal Server Error",
         },
     )
     @jwt_required()
@@ -94,10 +96,11 @@ class CreateMenuItem(Resource):
     @api.doc(
         security="Bearer Auth",
         responses={
-            200: "Item created",
+            201: "Item created",
             401: "Missing Authorization Header",
             403: "Access denied",
-            404: "Category not found or not authorized",
+            404: "Category not found",
+            500: "Internal Server Error",
         },
     )
     @jwt_required()
@@ -124,7 +127,7 @@ class GetItemsByCategory(Resource):
             200: "Success",
             401: "Missing Authorization Header",
             403: "Access denied",
-            404: "No items found for this category",
+            500: "Internal Server Error",
         },
     )
     @jwt_required()
@@ -142,7 +145,8 @@ class UpdateDeleteMenuItem(Resource):
             200: "Item updated",
             401: "Missing Authorization Header",
             403: "Access denied",
-            404: "Item not found or not authorized",
+            404: "Item not found",
+            500: "Internal Server Error",
         },
     )
     @jwt_required()
@@ -159,6 +163,7 @@ class UpdateDeleteMenuItem(Resource):
             401: "Missing Authorization Header",
             403: "Access denied",
             404: "Item not found or not authorized",
+            500: "Internal Server Error",
         },
     )
     @jwt_required()

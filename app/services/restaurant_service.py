@@ -88,10 +88,14 @@ class RestaurantService:
         db.session.commit()
         return {"msg": "Category deleted"}, 204
 
+    ################################################################################
+
     def create_menu_item(user_id, category_id, name, description, price, image):
         menu_category = MenuCategory.query.get(category_id)
-        if not menu_category or menu_category.restaurant.staff_user_id != user_id:
-            return {"msg": "Category not found or not authorized"}, 404
+        if not menu_category:
+            return {"msg": "Category not found"}, 404
+        if menu_category.restaurant.staff_user_id != user_id:
+            return {"msg": "Access denied"}, 403
 
         menu_item = MenuItem(
             category_id=category_id,
