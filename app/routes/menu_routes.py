@@ -1,5 +1,6 @@
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restx import Namespace, Resource
+from flask import abort
 
 from ..services import RestaurantService
 from ..utils.validations import RestxValidation
@@ -97,6 +98,7 @@ class CreateMenuItem(Resource):
         security="Bearer Auth",
         responses={
             201: "Item created",
+            400: "Price must be greater than zero",
             401: "Missing Authorization Header",
             403: "Access denied",
             404: "Category not found",
@@ -113,6 +115,10 @@ class CreateMenuItem(Resource):
         price = data["price"]
         image = data["image"]
         user_id = get_jwt_identity()
+
+        # Validate the price field
+        if price <= 0:
+            abort(400, "Price must be greater than zero")
 
         return RestaurantService.create_menu_item(
             user_id, category_id, name, description, price, image

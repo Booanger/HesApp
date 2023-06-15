@@ -3,12 +3,6 @@ from flask_restx import Namespace, Resource, abort
 
 from ..services import (
     OrderService,
-    OrderItemService,
-    TableService,
-    UserService,
-    RestaurantService,
-    MenuItemService,
-    BaseService,
 )
 from ..utils.validations import RestxValidation
 from ..utils.decorators import roles_required
@@ -19,15 +13,16 @@ api = Namespace("order", description="Order related operations")
 restx_validation = RestxValidation(api=api)
 
 
-@api.route("/orders")
+@api.route("")
 class CreateOrder(Resource):
     @api.doc(
         security="Bearer Auth",
         responses={
-            200: "Order created",
+            201: "Order created",
             401: "Missing Authorization Header",
-            404: "Restaurant or table not found",
-            500: "Failed to create order",
+            403: "Access denied",
+            404: "Table not found",
+            500: "Internal Server Error",
         },
     )
     @api.expect(restx_validation.create_order_model, validate=True)
@@ -39,60 +34,65 @@ class CreateOrder(Resource):
         table_id = data["table_id"]
         order_items = data["order_items"]
 
-        # Check if the restaurant and table exist
-        restaurant = RestaurantService.get(restaurant_id)
-        table = TableService.get(table_id)
-        if not restaurant or not table:
-            return {"msg": "Restaurant or table not found"}, 404
+        return OrderService.create_order(
+            self, user_id, restaurant_id, table_id, order_items
+        )
 
-        total_amount = 0.0
-        created_order_items = []
+        # # Check if the restaurant and table exist
+        # restaurant = RestaurantService.get(restaurant_id)
+        # table = TableService.get(table_id)
+        # if not restaurant or not table:
+        #     return {"msg": "Restaurant or table not found"}, 404
 
-        with BaseService.db.session.begin():
-            for order_item in order_items:
-                menu_item_id = order_item["menu_item_id"]
-                quantity = order_item["quantity"]
+        # total_amount = 0.0
+        # created_order_items = []
 
-                menu_item = MenuItemService.get(menu_item_id)
-                if not menu_item or menu_item.category.restaurant_id != restaurant_id:
-                    abort(
-                        400,
-                        message=f"No menu item found with {menu_item_id} or the menu item is not related to the specified restaurant",
-                    )
+        # with BaseService.db.session.begin():
+        #     for order_item in order_items:
+        #         menu_item_id = order_item["menu_item_id"]
+        #         quantity = order_item["quantity"]
 
-                price = menu_item.price * quantity
-                total_amount += price
+        #         menu_item = MenuItemService.get(menu_item_id)
+        #         if not menu_item or menu_item.category.restaurant_id != restaurant_id:
+        #             abort(
+        #                 400,
+        #                 message=f"No menu item found with {menu_item_id} or the menu item is not related to the specified restaurant",
+        #             )
 
-                created_order_item = OrderItemService.create(
-                    {
-                        "order_id": None,
-                        "menu_item_id": menu_item_id,
-                        "quantity": quantity,
-                        "price": price,
-                    }
-                )
-                created_order_items.append(created_order_item)
+        #         price = menu_item.price * quantity
+        #         total_amount += price
 
-            order = OrderService.create(
-                {
-                    "user_id": user_id,
-                    "restaurant_id": restaurant_id,
-                    "table_id": table_id,
-                    "status": enums.OrderStatus.PENDING,
-                    "total_amount": total_amount,
-                }
-            )
+        #         created_order_item = OrderItemService.create(
+        #             {
+        #                 "order_id": None,
+        #                 "menu_item_id": menu_item_id,
+        #                 "quantity": quantity,
+        #                 "price": price,
+        #             }
+        #         )
+        #         created_order_items.append(created_order_item)
 
-            for order_item in created_order_items:
-                order_item.order_id = order.id
+        #     order = OrderService.create(
+        #         {
+        #             "user_id": user_id,
+        #             "restaurant_id": restaurant_id,
+        #             "table_id": table_id,
+        #             "status": enums.OrderStatus.PENDING,
+        #             "total_amount": total_amount,
+        #         }
+        #     )
 
-        # Commit the changes
-        db.session.commit()
+        #     for order_item in created_order_items:
+        #         order_item.order_id = order.id
 
-        # Return the created order
-        return order.to_dict(), 200
+        # # Commit the changes
+        # db.session.commit()
+
+        # # Return the created order
+        # return order.to_dict(), 200
 
 
+"""
 @api.route("/<int:id>")
 class ReadUpdateDeleteOrder(Resource):
     @api.doc(
@@ -227,3 +227,4 @@ class GetTableOrders(Resource):
 
         orders = OrderService.get_by_table_id(table_id)
         return [order.to_dict() for order in orders], 200
+"""

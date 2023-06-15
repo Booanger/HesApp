@@ -164,27 +164,17 @@ class RestxValidation(metaclass=Singleton):
 
         ###############################################################################
 
-        self.restaurant_update_model = api.model(
-            "UpdateRestaurant",
+        self.create_menu_category_model = api.model(
+            "CreateMenuCategory",
             {
-                "name": fields.String(required=False, description="Restaurant name"),
-                "description": fields.String(
-                    required=False, description="Restaurant description"
-                ),
-                "address": fields.String(
-                    required=False, description="Restaurant address"
-                ),
-                "phone": fields.String(
-                    required=False,
-                    description="Restaurant phone",
-                    min_length=10,
-                    max_length=20,
+                "name": fields.String(
+                    required=True, description="Category name", min_length=1
                 ),
             },
         )
 
-        self.create_menu_category_model = api.model(
-            "CreateMenuCategory",
+        self.update_menu_category_model = api.model(
+            "UpdateMenuCategory",
             {
                 "name": fields.String(
                     required=True, description="Category name", min_length=1
@@ -204,15 +194,6 @@ class RestxValidation(metaclass=Singleton):
                 ),
                 "price": fields.Float(required=True, description="Menu item price"),
                 "image": fields.String(required=False, description="Menu item image"),
-            },
-        )
-
-        self.update_menu_category_model = api.model(
-            "UpdateMenuCategory",
-            {
-                "name": fields.String(
-                    required=True, description="Category name", min_length=1
-                ),
             },
         )
 
@@ -251,13 +232,19 @@ class RestxValidation(metaclass=Singleton):
             },
         )
 
+        ###############################################################################
+
         self.create_order_item_model = api.model(
             "CreateOrderItem",
             {
                 "menu_item_id": fields.Integer(
                     required=True, description="Menu Item ID"
                 ),
-                "quantity": fields.Integer(required=True, description="Quantity"),
+                "quantity": fields.Integer(
+                    required=True,
+                    description="Quantity",
+                    min_length=1,
+                ),
             },
         )
 

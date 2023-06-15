@@ -18,6 +18,7 @@ class MenuCategory(BaseModel):
             "id": self.id,
             "restaurant_id": self.restaurant_id,
             "name": self.name,
+            "items": [item.to_dict() for item in self.menu_items],
         }
 
 

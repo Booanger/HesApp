@@ -12,7 +12,7 @@ from .routes import (
     staff_routes,
     menu_routes,
     table_routes,
-    # order_routes,
+    order_routes,
     # payment_routes,
     # qr_code_routes,
 )
@@ -40,6 +40,8 @@ api.add_namespace(customer_routes.api, path="/customer")
 api.add_namespace(staff_routes.api, path="/staff")
 api.add_namespace(menu_routes.api, path="/menu")
 api.add_namespace(table_routes.api, path="/table")
+api.add_namespace(order_routes.api, path="/order")
+
 # TODO add order routes
 # TODO add payment routes
 # TODO add qr code routes
