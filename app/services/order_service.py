@@ -28,7 +28,7 @@ class OrderService:
                 order_item = OrderItem(
                     order_id=order.id,
                     menu_item_id=menu_item_id,
-                    menu_item_name = menu_item.name
+                    menu_item_name=menu_item.name,
                     quantity=quantity,
                     price=menu_item.price,
                 )
