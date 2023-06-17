@@ -1,11 +1,11 @@
 # from . import db
 # from .restaurant import Restaurant
-from .base_model import BaseModel
+from .base_models import BaseModel, DeletableModel
 from sqlalchemy import Column, Integer, String, Enum, ForeignKey, Float, Text
 from sqlalchemy.orm import relationship
 
 
-class MenuCategory(BaseModel):
+class MenuCategory(DeletableModel):
     __tablename__ = "menu_categories"
 
     restaurant_id = Column(Integer, ForeignKey("restaurants.id"))
@@ -22,7 +22,7 @@ class MenuCategory(BaseModel):
         }
 
 
-class MenuItem(BaseModel):
+class MenuItem(DeletableModel):
     __tablename__ = "menu_items"
 
     category_id = Column(Integer, ForeignKey("menu_categories.id"))

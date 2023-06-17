@@ -1,11 +1,11 @@
 # from . import db
 # from .user import User
-from .base_model import BaseModel
+from .base_models import BaseModel, DeletableModel
 from sqlalchemy import Column, Integer, String, ForeignKey, Text
 from sqlalchemy.orm import relationship
 
 
-class Restaurant(BaseModel):
+class Restaurant(DeletableModel):
     __tablename__ = "restaurants"
 
     staff_user_id = Column(Integer, ForeignKey("users.id"))

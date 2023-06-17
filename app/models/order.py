@@ -1,15 +1,14 @@
-from enum import Enum
-
 # from . import db
 # from .user import User
 # from .restaurant import Restaurant
+from enum import Enum
 from .. import enums
-from .base_model import BaseModel
-from sqlalchemy import Column, Integer, String, Enum, ForeignKey, Float
+from .base_models import BaseModel, DeletableModel
+from sqlalchemy import Column, Integer, String, Enum, ForeignKey, Float, Boolean
 from sqlalchemy.orm import relationship
 
 
-class Order(BaseModel):
+class Order(DeletableModel):
     __tablename__ = "orders"
 
     user_id = Column(Integer, ForeignKey("users.id"))
@@ -25,7 +24,7 @@ class Order(BaseModel):
     table = relationship("Table", backref="orders", lazy=True)
 
 
-class OrderItem(BaseModel):
+class OrderItem(DeletableModel):
     __tablename__ = "order_items"
 
     order_id = Column(Integer, ForeignKey("orders.id"))

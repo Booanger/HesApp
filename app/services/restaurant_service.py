@@ -146,6 +146,8 @@ class RestaurantService:
         if menu_item.category.restaurant.staff_user_id != user_id:
             return {"msg": "Not authorized"}, 403
 
+        # menu_item.category_id = None
+
         db.session.delete(menu_item)
         db.session.commit()
         return {"msg": "Item deleted"}, 204

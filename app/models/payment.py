@@ -1,8 +1,8 @@
-from enum import Enum
 # from . import db
 # from .order import Order
+from enum import Enum
 from .. import enums
-from .base_model import BaseModel
+from .base_models import BaseModel
 from sqlalchemy import Column, Integer, String, Enum, ForeignKey, Float
 from sqlalchemy.orm import relationship
 

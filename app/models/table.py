@@ -1,12 +1,12 @@
 # from enum import Enum
+# from . import db, enums
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 
-# from . import db, enums
-from .base_model import BaseModel
+from .base_models import BaseModel, DeletableModel
 
 
-class Table(BaseModel):
+class Table(DeletableModel):
     __tablename__ = "tables"
 
     restaurant_id = Column(Integer, ForeignKey("restaurants.id"), nullable=False)

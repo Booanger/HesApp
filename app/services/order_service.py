@@ -15,8 +15,10 @@ class OrderService:
             restaurant_id=restaurant_id,
             table_id=table_id,
             status="pending",
+            is_active=True,
         )
         db.session.add(order)
+        db.session.flush()
 
         total_amount = 0.0
         # Add order items
@@ -38,6 +40,9 @@ class OrderService:
 
         order.total_amount = total_amount
         db.session.commit()
+
+        # publish(f"127.0.0.1/restaurants/{restaurant_id}/order", order.id)
+
         return order, 201
 
     def get_order(self, order_id):
@@ -54,14 +59,14 @@ class OrderService:
             return order
         return None
 
-    def delete_order(self, order_id):
-        # Delete an order
-        order = Order.query.get(order_id)
-        if order:
-            db.session.delete(order)
-            db.session.commit()
-            return True
-        return False
+    # def delete_order(self, order_id):
+    #     # Delete an order
+    #     order = Order.query.get(order_id)
+    #     if order:
+    #         db.session.delete(order)
+    #         db.session.commit()
+    #         return True
+    #     return False
 
     def get_order_status(self, order_id):
         # Get the status of an order

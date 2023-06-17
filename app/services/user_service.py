@@ -2,15 +2,17 @@ from . import db, User, Restaurant, UserRole
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token
 from datetime import timedelta
+from flask import jsonify
 
 
 class UserService:
     # Authorization
     def login(email, password):
-        # Authenticate the user and return access tokens or manage sessions
         user = User.query.filter_by(email=email).first()
         if not user:
             return {"msg": "User not found"}, 404
+        if not user.is_active:
+            return {"msg": "User is banned"}, 403
         if not check_password_hash(user.password, password):
             return {"msg": "Bad username or password"}, 401
 
@@ -32,6 +34,7 @@ class UserService:
             password=generate_password_hash(password, method="scrypt"),
             phone=phone,
             role=UserRole.CUSTOMER,
+            is_active=True,
         )
         db.session.add(customer)
         db.session.commit()
@@ -52,7 +55,6 @@ class UserService:
         restaurant_description,
         restaurant_address,
         restaurant_phone,
-        # restaurant_logo,
     ):
         existing_user = User.query.filter(
             (User.email == email) | (User.username == username)
@@ -66,8 +68,10 @@ class UserService:
             password=generate_password_hash(password, method="scrypt"),
             phone=phone,
             role=UserRole.STAFF,
+            is_active=True,
         )
         db.session.add(staff)
+        db.session.flush()
 
         restaurant = Restaurant(
             staff_user_id=staff.id,
@@ -75,7 +79,7 @@ class UserService:
             description=restaurant_description,
             address=restaurant_address,
             phone=restaurant_phone,
-            # logo=restaurant_logo,
+            is_active=True,
         )
         db.session.add(restaurant)
 

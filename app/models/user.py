@@ -2,10 +2,10 @@ from enum import Enum
 from sqlalchemy import Column, String, Enum
 from sqlalchemy.orm import relationship
 from . import enums
-from .base_model import BaseModel
+from .base_models import BaseModel, DeletableModel
 
 
-class User(BaseModel):
+class User(DeletableModel):
     __tablename__ = "users"
 
     username = Column(String(100), unique=True)
