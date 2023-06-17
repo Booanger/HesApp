@@ -83,19 +83,3 @@ class UpdateDeleteTable(Resource):
     def delete(self, table_id):
         user_id = get_jwt_identity()
         return RestaurantService.delete_table(table_id, user_id)
-
-    # @api.doc(
-    #     security="Bearer Auth",
-    #     responses={
-    #         200: "Success",
-    #         401: "Missing Authorization Header",
-    #         403: "Access denied",
-    #         404: "Table not found or not authorized",
-    #     },
-    # )
-    # @jwt_required()
-    # def get(self, id):
-    #     table = TableService.get(id)
-    #     if not table or table.restaurant.staff_user_id != get_jwt_identity():
-    #         return {"msg": "Table not found or not authorized"}, 404
-    #     return table.to_dict(), 200

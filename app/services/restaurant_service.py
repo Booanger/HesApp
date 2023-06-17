@@ -13,18 +13,20 @@ class RestaurantService:
         return table.to_dict(), 201  # Use 201 for Created
 
     def get_table(table_id):
-        table = Table.query.get(table_id)
+        table = Table.query.filter_by(id=table_id, is_active=True).first()
         if not table:
             return {"msg": "No Table found for this table id"}, 404
 
         return table.to_dict(), 200
 
     def get_tables_by_restaurant_id(restaurant_id):
-        tables = Table.query.filter_by(restaurant_id=restaurant_id).all()
+        tables = Table.query.filter_by(
+            restaurant_id=restaurant_id, is_active=True
+        ).all()
         return [table.to_dict() for table in tables], 200
 
     def update_table(table_id, data, user_id):
-        table = Table.query.get(table_id)
+        table = Table.query.filter_by(id=table_id, is_active=True).first()
         if not table:
             return {"msg": "Table not found"}, 404
         if table.restaurant.staff_user_id != user_id:
@@ -34,13 +36,13 @@ class RestaurantService:
         return table.to_dict(), 200
 
     def delete_table(table_id, user_id):
-        table = Table.query.get(table_id)
+        table = Table.query.filter_by(id=table_id, is_active=True).first()
         if not table:
             return {"msg": "Table not found"}, 404
         if table.restaurant.staff_user_id != user_id:
             return {"msg": "Access denied"}, 403
 
-        db.session.delete(table)
+        table.is_active = False
         db.session.commit()
         return {"msg": "Category deleted"}, 204  # Use 204 for No Content
 
@@ -57,18 +59,22 @@ class RestaurantService:
         return menu_category.to_dict(), 201
 
     def get_menu_category(category_id):
-        category = MenuCategory.query.get(category_id)
+        category = MenuCategory.query.filter_by(id=category_id, is_active=True).first()
         if not category:
             return {"msg": "No category found for this category id"}, 404
 
         return category.to_dict(), 200
 
     def get_menu_categories_by_restaurant_id(restaurant_id):
-        categories = MenuCategory.query.filter_by(restaurant_id=restaurant_id).all()
+        categories = MenuCategory.query.filter_by(
+            restaurant_id=restaurant_id, is_active=True
+        ).all()
         return [category.to_dict() for category in categories], 200
 
     def update_menu_category(category_id, data, user_id):
-        menu_category = MenuCategory.query.get(category_id)
+        menu_category = MenuCategory.query.filter_by(
+            id=category_id, is_active=True
+        ).first()
         if not menu_category:
             return {"msg": "Category not found"}, 404
         if menu_category.restaurant.staff_user_id != user_id:
@@ -78,13 +84,15 @@ class RestaurantService:
         return menu_category.to_dict(), 200
 
     def delete_menu_category(category_id, user_id):
-        menu_category = MenuCategory.query.get(category_id)
+        menu_category = MenuCategory.query.filter_by(
+            id=category_id, is_active=True
+        ).first()
         if not menu_category:
             return {"msg": "Category not found"}, 404
         if menu_category.restaurant.staff_user_id != user_id:
             return {"msg": "Access denied"}, 403
 
-        db.session.delete(menu_category)
+        menu_category.is_active = False
         db.session.commit()
         return {"msg": "Category deleted"}, 204
 
@@ -109,18 +117,18 @@ class RestaurantService:
         return menu_item.to_dict(), 201
 
     def get_menu_item(item_id):
-        item = MenuItem.query.get(item_id)
+        item = MenuItem.query.filter_by(id=item_id, is_active=True)
         if not item:
             return {"msg": "No item found for this item id"}, 404
 
         return item.to_dict(), 200
 
     def get_menu_items_by_category_id(category_id):
-        items = MenuItem.query.filter_by(category_id=category_id).all()
+        items = MenuItem.query.filter_by(category_id=category_id, is_active=True).all()
         return [item.to_dict() for item in items], 200
 
     def update_menu_item(item_id, data, user_id):
-        menu_item = MenuItem.query.get(item_id)
+        menu_item = MenuItem.query.filter_by(id=item_id, is_active=True).first()
         if not menu_item:
             return {"msg": "Item not found"}, 404
         if menu_item.category.restaurant.staff_user_id != user_id:
@@ -140,7 +148,7 @@ class RestaurantService:
         return menu_item.to_dict(), 200
 
     def delete_menu_item(item_id, user_id):
-        menu_item = MenuItem.query.get(item_id)
+        menu_item = MenuItem.query.filter_by(id=item_id, is_active=True).first()
         if not menu_item:
             return {"msg": "Item not found"}, 404
         if menu_item.category.restaurant.staff_user_id != user_id:
@@ -148,6 +156,6 @@ class RestaurantService:
 
         # menu_item.category_id = None
 
-        db.session.delete(menu_item)
+        menu_item.is_active = False
         db.session.commit()
         return {"msg": "Item deleted"}, 204
