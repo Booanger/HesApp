@@ -18,7 +18,7 @@ class MenuCategory(DeletableModel):
             "id": self.id,
             "restaurant_id": self.restaurant_id,
             "name": self.name,
-            "items": [item.to_dict() for item in self.menu_items],
+            "items": [item.to_dict() for item in self.menu_items if item.is_active],
         }
 
 
