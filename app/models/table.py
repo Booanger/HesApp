@@ -20,10 +20,8 @@ class Table(DeletableModel):
                 user_dict = order.user.to_dict()
                 user_id = user_dict["id"]
                 if user_id not in user_orders:
-                    user_orders[user_id] = {
-                        "user": user_dict,
-                        "orders": [],
-                    }
+                    user_orders[user_id] = user_dict
+                    user_orders[user_id]["orders"] = []
                 user_orders[user_id]["orders"].append(order.to_dict())
 
         return {
