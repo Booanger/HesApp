@@ -14,8 +14,21 @@ class Table(DeletableModel):
     # capacity = Column(Integer, nullable=False)
 
     def to_dict(self):
+        user_orders = {}
+        for order in self.orders:
+            if order.is_active:
+                user_dict = order.user.to_dict()
+                user_id = user_dict["id"]
+                if user_id not in user_orders:
+                    user_orders[user_id] = {
+                        "user": user_dict,
+                        "orders": [],
+                    }
+                user_orders[user_id]["orders"].append(order.to_dict())
+
         return {
             "id": self.id,
             "restaurant_id": self.restaurant_id,
             "name": self.name,
+            "users": list(user_orders.values()),
         }

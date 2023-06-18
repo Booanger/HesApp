@@ -1,4 +1,6 @@
 from flask_restx import fields  # , ValidationError
+from ..enums import OrderStatus
+
 
 # from flask_restx.inputs import email
 # from flask_restx.reqparse import RequestParser
@@ -20,6 +22,8 @@ class RestxValidation(metaclass=Singleton):
     def __init__(self, api):
         self.api = api
 
+        ## Authorization
+
         self.login_model = api.model(
             "Login",
             {
@@ -29,8 +33,8 @@ class RestxValidation(metaclass=Singleton):
                     max_length=120,
                     pattern=r"^[\w\.\-]+@([\w\-]+\.)+[\w\-]{2,4}$",
                     example="example@example.com",
-                    error_message={
-                        "pattern": "Invalid email format. Please provide a valid email address."
+                    error={
+                        "msg": "Invalid email format. Please provide a valid email address."
                     },
                 ),
                 "password": fields.String(
@@ -111,6 +115,8 @@ class RestxValidation(metaclass=Singleton):
             },
         )
 
+        ## Profile
+
         self.update_customer_model = api.model(
             "UpdateUser",
             {
@@ -162,7 +168,7 @@ class RestxValidation(metaclass=Singleton):
             },
         )
 
-        ###############################################################################
+        ## Menu
 
         self.create_menu_category_model = api.model(
             "CreateMenuCategory",
@@ -232,7 +238,7 @@ class RestxValidation(metaclass=Singleton):
             },
         )
 
-        ###############################################################################
+        ## ORDER
 
         self.create_order_item_model = api.model(
             "CreateOrderItem",
@@ -263,10 +269,31 @@ class RestxValidation(metaclass=Singleton):
             },
         )
 
-        self.update_order_model = api.model(
+        self.update_order_status_model = api.model(
             "UpdateOrder",
             {
-                "status": fields.String(required=True, description="Order status"),
+                "status": fields.String(
+                    required=True,
+                    description="Updated order status",
+                    enum=[
+                        OrderStatus.PENDING.value,
+                        OrderStatus.ACCEPTED.value,
+                        OrderStatus.PREPARING.value,
+                        OrderStatus.READY.value,
+                        OrderStatus.DELIVERED.value,
+                        OrderStatus.CANCELED.value,
+                    ],
+                ),
+            },
+        )
+
+        self.get_order_history_model = api.model(
+            "GetOrderHistory",
+            {
+                "page": fields.Integer(required=False, description="Page number"),
+                "per_page": fields.Integer(
+                    required=False, description="Items per page"
+                ),
             },
         )
 

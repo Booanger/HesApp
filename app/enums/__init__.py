@@ -8,12 +8,12 @@ class UserRole(Enum):
 
 
 class OrderStatus(Enum):
-    PENDING = "pending"
-    ACCEPTED = "accepted"
-    PREPARING = "preparing"
-    READY = "ready"
-    DELIVERED = "delivered"
-    CANCELED = "canceled"
+    PENDING = "PENDING"
+    ACCEPTED = "ACCEPTED"
+    PREPARING = "PREPARING"
+    READY = "READY"
+    DELIVERED = "DELIVERED"
+    CANCELED = "CANCELED"
 
 
 class TransactionStatus(Enum):

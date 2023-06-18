@@ -8,9 +8,17 @@ from sqlalchemy.orm import relationship
 
 
 class PaymentTransaction(BaseModel):
-    __tablename__ = 'payment_transactions'
+    __tablename__ = "payment_transactions"
 
-    order_id = Column(Integer, ForeignKey('orders.id'))
+    order_id = Column(Integer, ForeignKey("orders.id"))
     transaction_id = Column(String(100))
     status = Column(Enum(enums.TransactionStatus))
     amount = Column(Float)
+
+    def to_dict(self):
+        return {
+            "order_id": self.order_id,
+            "transaction_id": self.transaction_id,
+            "status": self.status.value,
+            "amount": self.amount,
+        }
