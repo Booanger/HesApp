@@ -102,7 +102,7 @@ class UserService:
     def update_customer(customer_id, data):
         # Update customer user information
         if "password" in data:
-            hashed_password = generate_password_hash(data["password"], method="sha256")
+            hashed_password = generate_password_hash(data["password"], method="scrypt")
             data["password"] = hashed_password
 
         if "username" in data:
@@ -141,7 +141,7 @@ class UserService:
     def update_staff(staff_id, data):
         # Update staff user and related restaurant information
         if "password" in data:
-            hashed_password = generate_password_hash(data["password"], method="sha256")
+            hashed_password = generate_password_hash(data["password"], method="scrypt")
             data["password"] = hashed_password
 
         if "username" in data:
