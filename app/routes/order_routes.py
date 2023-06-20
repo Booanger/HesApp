@@ -36,9 +36,7 @@ class CreateOrder(Resource):
         table_id = data["table_id"]
         order_items = data["order_items"]
 
-        return OrderService.create_order(
-            self, user_id, restaurant_id, table_id, order_items
-        )
+        return OrderService.create_order(user_id, restaurant_id, table_id, order_items)
 
 
 @api.route("/customer-history")
@@ -64,7 +62,7 @@ class GetOrderHistory(Resource):
         page = int(request.args.get("page", 1))
         per_page = int(request.args.get("per_page", 10))
 
-        return OrderService.get_order_history(self, user_id, page, per_page)
+        return OrderService.get_order_history(user_id, page, per_page)
 
 
 @api.route("/<int:order_id>/update-status")
@@ -86,7 +84,7 @@ class UpdateOrderStatus(Resource):
         user_id = get_jwt_identity()
         data = api.payload
 
-        return OrderService.update_order_status(self, user_id, order_id, data)
+        return OrderService.update_order_status(user_id, order_id, data)
 
 
 @api.route("/<int:order_id>/cancel")
@@ -106,4 +104,4 @@ class CancelOrder(Resource):
     def delete(self, order_id):
         user_id = get_jwt_identity()
 
-        return OrderService.cancel_my_order(self, user_id, order_id)
+        return OrderService.cancel_my_order(user_id, order_id)
