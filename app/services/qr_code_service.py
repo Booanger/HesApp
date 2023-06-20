@@ -1,4 +1,7 @@
 from . import db, Table
+import qrcode
+from io import BytesIO
+import base64
 
 
 class QRCodeService:
@@ -8,6 +11,41 @@ class QRCodeService:
         if table:
             return {"restaurant_id": table.restaurant_id, "table_id": table.id}, 200
         return {"msg": "Table not found"}, 404
+
+    @staticmethod
+    def generate_qr_codes_for_restaurant(restaurant_id: int):
+        # Retrieve the table_ids associated with the restaurant_id
+        table_ids = (
+            Table.query.filter_by(restaurant_id=restaurant_id, is_active=True)
+            .with_entities(Table.id)
+            .all()
+        )
+
+        qr_codes = []
+        for table_tuple in table_ids:
+            table_id = table_tuple[0]
+            # Generate the QR code data (e.g., restaurant_id and table_id)
+            qr_data = {"restaurant_id": restaurant_id, "table_id": table_id}
+
+            # Create a QR code from the data
+            qr = qrcode.QRCode(
+                version=1,
+                error_correction=qrcode.constants.ERROR_CORRECT_H,
+                box_size=10,
+                border=4,
+            )
+            qr.add_data(qr_data)
+            qr.make(fit=True)
+
+            img = qr.make_image(fill="black", back_color="white")
+
+            buffered = BytesIO()
+            img.save(buffered, format="PNG")
+            img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+
+            qr_codes.append((img_str, table_id))
+
+        return qr_codes
 
 
 """ Might be useful:

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            justify-items: center;
+        }
+        .grid-item {
+            text-align: center;
+            overflow: hidden;
+        }
+        .grid-item img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container">
+        {% for qr_code, table_id in qr_codes %}
+        <div class="grid-item">
+            <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code for table {{ table_id }}">
+            <p>Table ID: {{ table_id }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

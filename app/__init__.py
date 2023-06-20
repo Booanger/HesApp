@@ -20,7 +20,7 @@ from .routes import (
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder="templates")
     if FLASK_ENV == "development":
         app.config.from_object(DevelopmentConfig)
     elif FLASK_ENV == "testing":
