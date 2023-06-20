@@ -3,6 +3,15 @@ from . import db, Table
 
 class QRCodeService:
     @staticmethod
+    def get_table_id_and_restaurant_id(table_id):
+        table = Table.query.filter_by(id=table_id, is_active=True).first()
+        if table:
+            return {"restaurant_id": table.restaurant_id, "table_id": table.id}, 200
+        return {"msg": "Table not found"}, 404
+
+
+""" Might be useful:
+    @staticmethod
     def generate_qr_code(data):
         # Generate a QR code based on the provided data
         # Placeholder code for demonstration purposes
@@ -26,3 +35,4 @@ class QRCodeService:
             db.session.commit()
             return table
         return None
+"""

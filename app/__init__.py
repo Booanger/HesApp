@@ -15,7 +15,7 @@ from .routes import (
     table_routes,
     order_routes,
     # payment_routes,
-    # qr_code_routes,
+    qr_code_routes,
 )
 
 
