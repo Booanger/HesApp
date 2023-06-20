@@ -20,6 +20,7 @@ class OrderService:
             table_id=table_id,
             status=OrderStatus.PENDING,
             is_active=True,
+            total_amount=0,
         )
         db.session.add(order)
         db.session.flush()
