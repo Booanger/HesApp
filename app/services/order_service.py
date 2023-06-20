@@ -5,7 +5,8 @@ from werkzeug.exceptions import NotFound
 
 
 class OrderService:
-    def create_order(self, user_id, restaurant_id, table_id, order_items):
+    @staticmethod
+    def create_order(user_id, restaurant_id, table_id, order_items):
         # Place a new order with the selected menu items and table assignment
         table = Table.query.filter_by(id=table_id, is_active=True).first()
         if not table:
@@ -53,20 +54,23 @@ class OrderService:
 
         return order.to_dict(), 201
 
-    # NEED WORK
-    def get_order(self, user_id, order_id):
+    # TODO NEED WORK
+    @staticmethod
+    def get_order(user_id, order_id):
         # Retrieve order information
         return Order.query.get(order_id)
 
-    # NEED WORK
-    def get_order_status(self, user_id, order_id):
+    # TODO NEED WORK
+    @staticmethod
+    def get_order_status(user_id, order_id):
         # Get the status of an order
         order = Order.query.get(order_id)
         if order:
             return order.status
         return None
 
-    def get_order_history(self, customer_user_id, page=1, per_page=10):
+    @staticmethod
+    def get_order_history(customer_user_id, page=1, per_page=10):
         # Retrieve order history for a specific user with pagination, sorted by order_time in descending order
         try:
             # Retrieve order history for a specific user with pagination, sorted by order_time in descending order
@@ -89,7 +93,8 @@ class OrderService:
         except NotFound:
             return {"msg": "Page not found"}, 404
 
-    def update_order_status(self, staff_user_id, order_id, data):
+    @staticmethod
+    def update_order_status(staff_user_id, order_id, data):
         # Update order information
         order = Order.query.filter_by(id=order_id, is_active=True).first()
 
@@ -112,7 +117,8 @@ class OrderService:
 
         return {"msg": "Order not found"}, 404
 
-    def cancel_my_order(self, customer_user_id, order_id):
+    @staticmethod
+    def cancel_my_order(customer_user_id, order_id):
         # Cancel an order within a specific timeframe
         order = Order.query.filter_by(id=order_id, is_active=True).first()
         if (

@@ -2,6 +2,7 @@ from . import db, Table, MenuItem, MenuCategory, Restaurant
 
 
 class RestaurantService:
+    @staticmethod
     def create_table(user_id, name):
         restaurant = Restaurant.query.filter_by(staff_user_id=user_id).first()
         if not restaurant:
@@ -12,6 +13,7 @@ class RestaurantService:
         db.session.commit()
         return table.to_dict(), 201  # Use 201 for Created
 
+    @staticmethod
     def get_table(table_id):
         table = Table.query.filter_by(id=table_id, is_active=True).first()
         if not table:
@@ -25,6 +27,7 @@ class RestaurantService:
         ).all()
         return [table.to_dict() for table in tables], 200
 
+    @staticmethod
     def update_table(table_id, data, user_id):
         table = Table.query.filter_by(id=table_id, is_active=True).first()
         if not table:
@@ -35,6 +38,7 @@ class RestaurantService:
         db.session.commit()
         return table.to_dict(), 200
 
+    @staticmethod
     def delete_table(table_id, user_id):
         table = Table.query.filter_by(id=table_id, is_active=True).first()
         if not table:
@@ -48,6 +52,7 @@ class RestaurantService:
 
     ################################################################################
 
+    @staticmethod
     def create_menu_category(user_id, name):
         restaurant = Restaurant.query.filter_by(staff_user_id=user_id).first()
         if not restaurant:
@@ -58,6 +63,7 @@ class RestaurantService:
         db.session.commit()
         return menu_category.to_dict(), 201
 
+    @staticmethod
     def get_menu_category(category_id):
         category = MenuCategory.query.filter_by(id=category_id, is_active=True).first()
         if not category:
@@ -65,12 +71,14 @@ class RestaurantService:
 
         return category.to_dict(), 200
 
+    @staticmethod
     def get_menu_categories_by_restaurant_id(restaurant_id):
         categories = MenuCategory.query.filter_by(
             restaurant_id=restaurant_id, is_active=True
         ).all()
         return [category.to_dict() for category in categories], 200
 
+    @staticmethod
     def update_menu_category(category_id, data, user_id):
         menu_category = MenuCategory.query.filter_by(
             id=category_id, is_active=True
@@ -83,6 +91,7 @@ class RestaurantService:
         db.session.commit()
         return menu_category.to_dict(), 200
 
+    @staticmethod
     def delete_menu_category(category_id, user_id):
         menu_category = MenuCategory.query.filter_by(
             id=category_id, is_active=True
@@ -98,6 +107,7 @@ class RestaurantService:
 
     ################################################################################
 
+    @staticmethod
     def create_menu_item(user_id, category_id, name, description, price, image):
         menu_category = MenuCategory.query.get(category_id)
         if not menu_category:
@@ -116,6 +126,7 @@ class RestaurantService:
         db.session.commit()
         return menu_item.to_dict(), 201
 
+    @staticmethod
     def get_menu_item(item_id):
         item = MenuItem.query.filter_by(id=item_id, is_active=True)
         if not item:
@@ -123,10 +134,12 @@ class RestaurantService:
 
         return item.to_dict(), 200
 
+    @staticmethod
     def get_menu_items_by_category_id(category_id):
         items = MenuItem.query.filter_by(category_id=category_id, is_active=True).all()
         return [item.to_dict() for item in items], 200
 
+    @staticmethod
     def update_menu_item(item_id, data, user_id):
         menu_item = MenuItem.query.filter_by(id=item_id, is_active=True).first()
         if not menu_item:
@@ -147,6 +160,7 @@ class RestaurantService:
         db.session.commit()
         return menu_item.to_dict(), 200
 
+    @staticmethod
     def delete_menu_item(item_id, user_id):
         menu_item = MenuItem.query.filter_by(id=item_id, is_active=True).first()
         if not menu_item:

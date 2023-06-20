@@ -2,6 +2,7 @@ from . import db, PaymentTransaction
 
 
 class PaymentService:
+    @staticmethod
     def process_payment(self, order_id, payment_details):
         # Handle payment processing using a payment gateway or third-party service
         # Placeholder code for demonstration purposes
@@ -15,6 +16,7 @@ class PaymentService:
         db.session.commit()
         return payment_transaction
 
+    @staticmethod
     def get_payment_status(self, order_id):
         # Get the status of a payment transaction
         payment_transaction = PaymentTransaction.query.filter_by(
@@ -24,6 +26,7 @@ class PaymentService:
             return payment_transaction.status
         return None
 
+    @staticmethod
     def refund_payment(self, order_id):
         # Handle refund requests and cancellations of payments
         payment_transaction = PaymentTransaction.query.filter_by(

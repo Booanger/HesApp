@@ -7,6 +7,7 @@ from flask import jsonify
 
 class UserService:
     # Authorization
+    @staticmethod
     def login(email, password):
         user = User.query.filter_by(email=email).first()
         if not user:
@@ -21,6 +22,7 @@ class UserService:
         )
         return {"access_token": access_token}, 200
 
+    @staticmethod
     def register_customer(username, email, password, phone):
         existing_user = User.query.filter(
             (User.email == email) | (User.username == username)
@@ -46,6 +48,7 @@ class UserService:
             "access_token": access_token,
         }, 201
 
+    @staticmethod
     def register_staff(
         username,
         email,
@@ -92,6 +95,7 @@ class UserService:
         }, 201
 
     # Customer Related
+    @staticmethod
     def get_customer(customer_id):
         # Retrieve customer user information
         customer = User.query.filter_by(id=customer_id, role=UserRole.CUSTOMER).first()
@@ -99,6 +103,7 @@ class UserService:
             return customer.to_dict(), 200
         return {"msg": "User not found"}, 404
 
+    @staticmethod
     def update_customer(customer_id, data):
         # Update customer user information
         if "password" in data:
@@ -122,6 +127,7 @@ class UserService:
         return {"msg": "User update failed"}, 500
 
     # Staff Related
+    @staticmethod
     def get_staff(staff_id):
         # Retrieve staff user and related restaurant information
         staff = User.query.filter_by(id=staff_id, role=UserRole.STAFF).first()
@@ -138,6 +144,7 @@ class UserService:
             return staff, 200
         return {"msg": "Staff not found"}, 404
 
+    @staticmethod
     def update_staff(staff_id, data):
         # Update staff user and related restaurant information
         if "password" in data:
@@ -168,6 +175,7 @@ class UserService:
             return {"msg": "Staff updated successfully"}, 200
         return {"msg": "Staff update failed"}, 500
 
+    @staticmethod
     def get_role(user_id):
         user = User.query.filter_by(id=user_id).first()
         if user:
