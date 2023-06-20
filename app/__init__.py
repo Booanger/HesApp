@@ -72,6 +72,6 @@ def create_app():
     api.add_namespace(table_routes.api, path="/table")
     api.add_namespace(order_routes.api, path="/order")
     # api.add_namespace(payment_routes.api, path="/payment")
-    # api.add_namespace(qr_code_routes.api, path="/qr")
+    api.add_namespace(qr_code_routes.api, path="/qr")
 
     return app
