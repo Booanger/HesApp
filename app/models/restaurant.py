@@ -8,7 +8,7 @@ from sqlalchemy.orm import relationship
 class Restaurant(DeletableModel):
     __tablename__ = "restaurants"
 
-    staff_user_id = Column(Integer, ForeignKey("users.id"))
+    staff_user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     name = Column(String(100))
     description = Column(Text)
     address = Column(String(200))

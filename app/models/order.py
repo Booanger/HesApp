@@ -12,12 +12,12 @@ from datetime import datetime
 class Order(DeletableModel):
     __tablename__ = "orders"
 
-    user_id = Column(Integer, ForeignKey("users.id"))
-    restaurant_id = Column(Integer, ForeignKey("restaurants.id"))
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    restaurant_id = Column(Integer, ForeignKey("restaurants.id"), nullable=False)
     table_id = Column(Integer, ForeignKey("tables.id"))
-    status = Column(Enum(enums.OrderStatus))
-    total_amount = Column(Float)
-    order_time = Column(DateTime, default=datetime.utcnow())
+    status = Column(Enum(enums.OrderStatus), nullable=False)
+    total_amount = Column(Float, nullable=False)
+    order_time = Column(DateTime, default=datetime.utcnow(), nullable=False)
     delivery_time = Column(DateTime)
 
     order_items = relationship("OrderItem", backref="order", lazy="dynamic")

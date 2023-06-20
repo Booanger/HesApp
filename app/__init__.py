@@ -1,6 +1,6 @@
 from flask import Flask, request, Response
 from werkzeug.security import check_password_hash, generate_password_hash
-from config import DevelopmentConfig, ProductionConfig, TestingConfig
+from config import FLASK_ENV, DevelopmentConfig, ProductionConfig, TestingConfig
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from flask_cors import CORS
@@ -18,11 +18,12 @@ from .routes import (
     # qr_code_routes,
 )
 
-def create_app(config_name):
+
+def create_app():
     app = Flask(__name__)
-    if config_name == "development":
+    if FLASK_ENV == "development":
         app.config.from_object(DevelopmentConfig)
-    elif config_name == "testing":
+    elif FLASK_ENV == "testing":
         app.config.from_object(TestingConfig)
     else:
         app.config.from_object(ProductionConfig)

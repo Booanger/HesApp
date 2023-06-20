@@ -12,4 +12,4 @@ class BaseModel(db.Model):
 class DeletableModel(BaseModel):
     __abstract__ = True
 
-    is_active = Column(Boolean, default=True)
+    is_active = Column(Boolean, default=True, nullable=False)

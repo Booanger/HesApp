@@ -8,8 +8,8 @@ from .base_models import BaseModel, DeletableModel
 class User(DeletableModel):
     __tablename__ = "users"
 
-    username = Column(String(100), unique=True)
-    email = Column(String(120), unique=True)
+    username = Column(String(100), unique=True, nullable=False)
+    email = Column(String(120), unique=True, nullable=False)
     password = Column(String(200))
     phone = Column(String(20))
     role = Column(Enum(enums.UserRole))

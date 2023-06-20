@@ -8,7 +8,7 @@ from sqlalchemy.orm import relationship
 class MenuCategory(DeletableModel):
     __tablename__ = "menu_categories"
 
-    restaurant_id = Column(Integer, ForeignKey("restaurants.id"))
+    restaurant_id = Column(Integer, ForeignKey("restaurants.id"), nullable=False)
     name = Column(String(100))
 
     menu_items = relationship("MenuItem", backref="category", lazy="dynamic")
@@ -25,10 +25,10 @@ class MenuCategory(DeletableModel):
 class MenuItem(DeletableModel):
     __tablename__ = "menu_items"
 
-    category_id = Column(Integer, ForeignKey("menu_categories.id"))
+    category_id = Column(Integer, ForeignKey("menu_categories.id"), nullable=False)
     name = Column(String(100))
     description = Column(Text)
-    price = Column(Float)
+    price = Column(Float, nullable=False)
     image = Column(String(200))
 
     order_items = relationship("OrderItem", backref="menu_item", lazy="dynamic")
