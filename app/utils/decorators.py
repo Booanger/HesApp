@@ -1,10 +1,13 @@
 from flask import jsonify, request
 from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
 from functools import wraps
+from flask_restx import Namespace
+
 from ..services import UserService
+from ..enums import UserRole
 
 
-def roles_required(*roles, api):
+def roles_required(*roles: UserRole, api: Namespace):
     def decorator(f):
         @wraps(f)
         @api.doc(
