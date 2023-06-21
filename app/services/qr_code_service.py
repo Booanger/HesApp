@@ -2,6 +2,7 @@ from . import db, Table
 import qrcode
 from io import BytesIO
 import base64
+import json
 
 
 class QRCodeService:
@@ -27,6 +28,9 @@ class QRCodeService:
             # Generate the QR code data (e.g., restaurant_id and table_id)
             qr_data = {"restaurant_id": restaurant_id, "table_id": table_id}
 
+            # Convert the data to a JSON string with double quotes
+            qr_data_str = json.dumps(qr_data)
+
             # Create a QR code from the data
             qr = qrcode.QRCode(
                 version=1,
@@ -34,7 +38,7 @@ class QRCodeService:
                 box_size=10,
                 border=4,
             )
-            qr.add_data(qr_data)
+            qr.add_data(qr_data_str)
             qr.make(fit=True)
 
             img = qr.make_image(fill="black", back_color="white")
