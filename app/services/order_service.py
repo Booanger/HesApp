@@ -109,7 +109,7 @@ class OrderService:
             ):
                 order.is_active = False
 
-                if status == OrderStatus.DELIVERED:
+                if status == OrderStatus.DELIVERED.value:
                     order.delivery_time = datetime.utcnow()
 
             db.session.commit()
