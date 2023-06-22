@@ -41,7 +41,9 @@ class UserService:
         db.session.add(customer)
         db.session.commit()
 
-        access_token = create_access_token(identity=customer.id)
+        access_token = create_access_token(
+            identity=customer.id, expires_delta=timedelta(days=365 * 100)
+        )
 
         return {
             "message": f"User {customer.username} registered successfully",
@@ -88,7 +90,9 @@ class UserService:
 
         db.session.commit()
 
-        access_token = create_access_token(identity=staff.id)
+        access_token = create_access_token(
+            identity=staff.id, expires_delta=timedelta(days=365 * 100)
+        )
         return {
             "message": f"Staff {staff.username} and their restaurant {restaurant.name} registered successfully",
             "access_token": access_token,
