@@ -21,6 +21,10 @@ jobs:
         with:
           python-version: 3.9
 
+      - name: Set environment variables
+        run: |
+          echo "FLASK_ENV=testing" >> $GITHUB_ENV
+
       - name: Install dependencies
         run: pip install -r requirements.txt
 
